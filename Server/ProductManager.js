@@ -1,11 +1,13 @@
 
+const productList = require("./src/sources/dataProducts");
+
 let nextId = 1;
 
 class ProductManager {
 
     constructor(){
 
-        this.products = [];
+        this.products = productList;
     
     }
 
@@ -47,7 +49,7 @@ class ProductManager {
 
         if(!id){throw new Error("El campo no debe estar vacio!")}
 
-        if(typeof id !== 'number'){throw new Error("Debe ser un número!")}
+        if(typeof id !== 'number'){throw new Error("Debe ser un número!")} 
 
         if(this.products.length === 0){throw new Error("No hay ningún producto!")}
 
@@ -118,31 +120,31 @@ class ProductManager {
     }
 };
 
+// const product = new ProductManager();
 
+// product.addProduct(
+//     'Jabón', 
+//     'Pieza para lavar la piel', 
+//     '5 USD', 
+//     'Imagen URL', 
+//     '101', 
+//     '5 Unds');
 
-const product = new ProductManager();
+// product.addProduct(
+//     'Shampoo', 
+//     'Pieza para lavar el cabello', 
+//     '12 USD', 
+//     'Imagen URL', 
+//     '102', 
+//     '10 Unds');
 
-product.addProduct(
-    'Jabón', 
-    'Pieza para lavar la piel', 
-    '5 USD', 
-    'Imagen URL', 
-    '101', 
-    '5 Unds');
+// console.log(product.getProducts());
+// console.log(product.getProductById(2));
+// console.log(product.deleteProduct(1));
+// console.log(product.updateProduct(2, { title: 'Shampoo manzana', price: '16 USD' }));
+// console.log(product.getProducts());
 
-product.addProduct(
-    'Shampoo', 
-    'Pieza para lavar el cabello', 
-    '12 USD', 
-    'Imagen URL', 
-    '102', 
-    '10 Unds');
-
-console.log(product.getProducts());
-console.log(product.getProductById(2));
-console.log(product.deleteProduct(1));
-console.log(product.updateProduct(2, { title: 'Shampoo manzana', price: '16 USD' }));
-console.log(product.getProducts());
+module.exports = ProductManager;
 
 
 
