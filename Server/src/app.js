@@ -1,47 +1,18 @@
 
 const express = require("express");
 const productsRoute = require("./routes/products");
+const cartsRouter = require("./routes/carts");
 const server = express();
-const ProductManager = require("../ProductManager");
+
+// La persistencia de la información se implementará utilizando el file system, 
+// donde los archivos “productos,json” y “carrito.json”, respaldan la información.
+// No es necesario realizar ninguna implementación visual, todo el flujo se puede 
+// realizar por Postman o por el cliente de tu preferencia.
 
 
 server.use(express.json());
 
-// server.use('/', productsRoute); Más adelante.
-
-const productManager = new ProductManager();
-
-server.get('/products', (req, res) => {
-
-    try {
-        const limit = parseInt(req.query.limit);
-
-        const isValidLimit = !isNaN(limit) && limit > 0;
-
-        const products = productManager.getProducts();
-
-        const limitedProducts = isValidLimit ? products.slice(0, limit) : products;
-     
-        res.status(200).json({products: limitedProducts})
-    } catch (error) {
-        res.status(400).json({error: error.message})
-    }
-
-})
-
-server.get('/products/:id', (req, res) => {
-
-    try {
-        const {id} = req.params
-    
-        const idNumber = parseInt(id)
-    
-        const producById = productManager.getProductById(idNumber);
-    
-        res.status(200).json({producById});    
-    } catch (error) {
-        res.status(400).json({error: error.message});
-    }
-})
+server.use('/api', productsRoute); 
+server.use('/carts', cartsRouter); 
 
 module.exports = server;
