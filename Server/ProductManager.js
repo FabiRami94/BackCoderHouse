@@ -6,15 +6,27 @@ let nextId = 1;
 class ProductManager {
 
     constructor(){
-
         this.products = productList;
-    
     }
 
-    addProduct(title, description, price, thumbnail, code, stock){
+    setNextId() {
+        if (this.products.length > 0) {
+          const maxId = Math.max(...this.products.map((product) => product.id));
+          nextId = maxId + 1;
+        }
+    }
 
-        
-        if(!title || !description || !price || !thumbnail || !code || !stock){
+    addProduct(
+        title, 
+        description, 
+        code, 
+        price, 
+        status = true, 
+        stock, 
+        category, 
+        thumbnail){
+
+        if(!title || !description || !code || !price || !status || !stock || !category){
             throw new Error("Faltan datos!!!")
         }
         
@@ -27,18 +39,22 @@ class ProductManager {
         // id = this.products.length + 1;
 
         //Forma 2.
-        const id = nextId;
-        nextId++;
+        this.setNextId();
 
         this.products.push({
-            id,
-            title, 
-            description,
-            price,
-            thumbnail,
-            code,
-            stock
-        })  
+            nextId,
+            title,
+            description, 
+            code, 
+            price, 
+            status, 
+            stock, 
+            category, 
+            thumbnail
+        });
+        
+        nextId++;
+        return { id: nextId - 1, title, code };
     }
 
     getProducts(){
@@ -86,7 +102,7 @@ class ProductManager {
         if (updatedInfo.description && typeof updatedInfo.description === 'string') {
             product.description = updatedInfo.description;
         }
-        if (updatedInfo.price && typeof updatedInfo.price === 'string') {
+        if (updatedInfo.price && typeof updatedInfo.price === 'number') {
             product.price = updatedInfo.price;
         }
         if (updatedInfo.thumbnail && typeof updatedInfo.thumbnail === 'string') {
@@ -95,7 +111,7 @@ class ProductManager {
         if (updatedInfo.code && typeof updatedInfo.code === 'string') {
             product.code = updatedInfo.code;
         }
-        if (updatedInfo.stock && typeof updatedInfo.stock === 'string') {
+        if (updatedInfo.stock && typeof updatedInfo.stock === 'number') {
             product.stock = updatedInfo.stock;
         }
 
