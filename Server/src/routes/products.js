@@ -5,14 +5,14 @@ const ProductManager = require("../../ProductManager");
 
 const productManager = new ProductManager();
 
-productsRoute.get('/products', (req, res) => {
+productsRoute.get('/products', async (req, res) => {
 
     try {
         const limit = parseInt(req.query.limit);
 
         const isValidLimit = !isNaN(limit) && limit > 0;
 
-        const products = productManager.getProducts();
+        const products = await productManager.getProducts();
 
         const limitedProducts = isValidLimit ? products.slice(0, limit) : products;
      
@@ -22,14 +22,14 @@ productsRoute.get('/products', (req, res) => {
     }
 });
 
-productsRoute.get('/products/:pid', (req, res) => {
+productsRoute.get('/products/:pid', async(req, res) => {
 
     try {
         const {pid} = req.params
     
         const idNumber = parseInt(pid)
     
-        const producById = productManager.getProductById(idNumber);
+        const producById = await productManager.getProductById(idNumber);
     
         res.status(200).json({producById});    
     } catch (error) {
@@ -37,7 +37,7 @@ productsRoute.get('/products/:pid', (req, res) => {
     }
 });
 
-productsRoute.post('/products', (req, res) => {
+productsRoute.post('/products', async (req, res) => {
 
     try {
         const { title, 
@@ -49,7 +49,7 @@ productsRoute.post('/products', (req, res) => {
             category, 
             thumbnail} = req.body;
     
-        const newProduct = productManager.addProduct(  
+        const newProduct = await productManager.addProduct(  
             title, 
             description, 
             code, 
@@ -65,11 +65,8 @@ productsRoute.post('/products', (req, res) => {
     }
 });
 
-productsRoute.put('/products/:pid', (req, res) => {
+productsRoute.put('/products/:pid', async (req, res) => {
     
-    // La ruta PUT /:pid deberá tomar un producto y actualizarlo por los campos 
-    // enviados desde body. NUNCA se debe actualizar o eliminar el id al momento de 
-    // hacer dicha actualización.
     try {
         const {pid} = req.params;
         const { title, 
@@ -83,7 +80,7 @@ productsRoute.put('/products/:pid', (req, res) => {
 
         const idNumber = parseInt(pid)
     
-        const updateProduct = productManager.updateProduct(
+        const updateProduct = await productManager.updateProduct(
             idNumber,  
             {title, 
             description, 
@@ -100,13 +97,13 @@ productsRoute.put('/products/:pid', (req, res) => {
     }
 });
 
-productsRoute.delete('/products/:pid', (req, res) => {
+productsRoute.delete('/products/:pid', async (req, res) => {
     
     try {
         const {pid} = req.params      
         const idNumber = parseInt(pid)
     
-        const productDelete = productManager.deleteProduct(idNumber)
+        const productDelete = await productManager.deleteProduct(idNumber)
         
         res.status(200).json({productDelete});
     } catch (error) {

@@ -1,38 +1,42 @@
 
-const {Router} = require("express");
-const cartsRouter = Router();
+const { Router } = require('express');
+const cartsRoute = Router();
+const CartManager = require('../../CartManager');
 
-cartsRouter.get('/:cid', (req, res) => {
+const cartManager = new CartManager();
 
+
+cartsRoute.post('/', async (req, res) => {
+    try {
+        await cartManager.createCart()
+        res.status(201).send("Carrito creado con exito!")
+    } catch (error) {
+        res.status(400).json({error: error.message})
+    }
 })
 
-cartsRouter.post('/:cid/products/:pid', (req, res) => {
+cartsRoute.get('/:cid', async (req, res) => {
 
+    try {
+        const cartId = req.params.cid;
+        const findCart = await cartManager.getCartById(cartId);
+   
+        res.status(200).json(findCart);         
+    } catch (error) {
+        res.status(404).send('No se encontró ningún carrito!')
+    }
 })
 
-module.exports = cartsRouter;
+cartsRoute.post('/:cid/product/:pid', async (req, res) => {
+    try {   
+        const cartId = req.params.cid;
+        const productId = req.params.pid;
+        
+        await cartManager.addProductToCart(cartId, productId);
+        res.status(200).send('Se agregó el producto al carrito correctamente!')
+    } catch (error) {
+        res.status(400).json({error: error.message});
+    }
+})
 
-// Para el carrito, el cual tendrá su router en /api/carts/, configurar dos 
-    // rutas:
-    
-    // La ruta raíz POST / deberá crear un nuevo carrito con la siguiente estructura:
-    // Id:Number/String (A tu elección, de igual manera como con los productos, debes 
-    //     asegurar que nunca se dupliquen los ids y que este se autogenere).
-    // products: Array que contendrá objetos que representen cada producto
-    
-
-// La ruta GET /:cid deberá listar los productos que pertenezcan al carrito con 
-// el parámetro cid proporcionados.
-
-// La ruta POST  /:cid/product/:pid deberá agregar el producto al arreglo 
-// “products” del carrito seleccionado, agregándose como un objeto bajo el 
-// siguiente formato:
-// product: SÓLO DEBE CONTENER EL ID DEL PRODUCTO (Es crucial que no agregues el 
-//     producto completo)
-
-// quantity: debe contener el número de ejemplares de dicho producto. El producto,
-//  de momento, se agregará de uno en uno.
-
-// Además, si un producto ya existente intenta agregarse al producto, incrementar 
-// el campo quantity de dicho producto.
-
+module.exports = cartsRoute;
