@@ -1,9 +1,7 @@
 
-const dataCarts = [
+[
     {
       "id": 1,
       "products": []
     }
-];
-
-module.exports = dataCarts;
+]

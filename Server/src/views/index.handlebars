@@ -1,0 +1,36 @@
+
+<div>
+    <h1>Hola, {{name}} bienvenidos a ecommerce</h1>
+    <script src="/socket.io/socket.io.js"></script>
+    <input type="text", id="text"></input>
+    <div id="mensajes">
+
+    </div>
+    <script>
+        const socket = io(); 
+        
+        socket.emit('recibirMensajeCliente', 'Estoy usando Socket');
+        io(); socket.on('solo-para-el-actual', (data) => console.log(data));
+        socket.on('mensaje-para-todos', (data) => console.log(data));
+        socket.on('enviar-mensajes-cliente', (data) => console.log(data));
+
+        const inputForMessage = document.querySelector('#text'); 
+        const divMessage = document.querySelector('#mensajes');
+
+        inputForMessage.addEventListener('keyup', (event) => {
+            if(event.key === 'Enter'){
+                socket.emit('messageClient', inputForMessage.value)
+                inputForMessage.value = '';
+            }
+        })
+
+        socket.on('mensaje-recibido-cliente', (arrayMensaje) => {
+            let mensajes = '';
+            arrayMensaje.forEach((mensaje) => {
+                mensajes += `<li>${mensaje.id} dice: ${mensaje.message}</li>`
+            })
+            divMessage.innerHTML = mensajes
+        })
+
+    </script> {{!-- No reconoce las rutas --}}  
+</div>

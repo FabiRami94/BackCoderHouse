@@ -31,13 +31,13 @@
   },
   {
     "id": 3,
-    "title": "Desodorante...",
-    "description": "Para aplicar en las axilas...",
-    "code": "103...",
+    "title": "Desodorante",
+    "description": "Para aplicar en las axilas",
+    "code": "103",
     "price": 10,
     "status": true,
     "stock": 5,
-    "category": "Higiene Personal....",
+    "category": "Higiene Personal",
     "thumbnail": [
       "Imagen URL1",
       "Imagen URL2",

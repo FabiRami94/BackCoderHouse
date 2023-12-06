@@ -34,7 +34,8 @@ class ProductManager {
         description,
         code,
         price,
-        status = true,
+        // status = true,
+        status,
         stock,
         category,
         thumbnail

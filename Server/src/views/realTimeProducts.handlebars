@@ -1,0 +1,89 @@
+
+<div>
+    <h1>Hola, Bienvenidos al e-commerce de productos en tiempo real</h1>
+    <form>
+        <div>
+            <label>Nombre:</label>
+            <input type="text" id="title" placeholder="Escribe el nombre...">
+        </div>
+        <div>
+            <label>Descripción:</label>
+            <input type="text" id="description" placeholder="Escribe una descripción...">
+        </div>
+        <div>
+            <label>Código:</label>
+            <input type="text" id="code" placeholder="Código">
+        </div>
+        <div>
+            <label>Precio:</label>
+            <input type="text" id="price" placeholder="Precio...">
+        </div>
+         <div>
+            <label>Estado:</label>
+            <input type="text" id="status" placeholder="Escribe true...">
+        </div>
+         <div>
+            <label>Inventario:</label>
+            <input type="text" id="stock" placeholder="Cantidad del Producto">
+        </div>
+        <div>
+            <label>Categoria:</label>
+            <input type="text" id="category" placeholder="Tipo de Categoria...">
+        </div>
+         <div>
+            <label>Imagen:</label>
+            <input type="text" id="images" placeholder="Por ahora en texto">
+        </div>
+        <button onclick=addProduct()>Agregar</button>
+    </form>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+
+        function addProduct() {
+            // Valor capturado de cada Input
+            const title = document.getElementById('title').value;
+            const description = document.getElementById('description').value;
+            const code = document.getElementById('code').value;
+            const price = document.getElementById('price').value;
+            const status = document.getElementById('status').value;
+            const stock = document.getElementById('stock').value;
+            const category = document.getElementById('category').value;
+            const thumbnail = document.getElementById('images').value;
+
+            // Envio del cliente al servidor con Socket.io
+            socket.emit('addProduct', ({
+                title, 
+                description, 
+                code, 
+                price, 
+                status, 
+                stock, 
+                category, 
+                thumbnail
+            }));
+        }
+
+        const productsList = document.querySelector('#listProducts');
+        
+        socket.on('newProduct', (product) => {
+            productsList.innerHTML = product
+        });
+
+    </script>
+    {{#if isAdmin}}
+        {{#each products}}
+            <div id="listProducts">
+                <p>ID: {{this.id}}</p>
+                <p>Nombre Producto: {{this.title}}</p>
+                <p>Descripción: {{this.description}}</p>
+                <p>Code: {{this.code}}</p>
+                <p>Precio: {{this.price}}</p>
+                <p>Stock: {{this.stock}}</p>
+                <hr>
+            </div>
+        {{/each}}
+    {{else}}
+        <h2>No eres admin</h2>
+    {{/if}}
+</div>

@@ -1,0 +1,19 @@
+
+<div>
+    <h1>Hola, Bienvenidos al e-commerce de productos.</h1>
+    {{#if isAdmin}}
+        {{#each products}}
+            <div>
+                <p>ID: {{this.id}}</p>
+                <p>Nombre Producto: {{this.title}}</p>
+                <p>Descripción: {{this.description}}</p>
+                <p>Code: {{this.code}}</p>
+                <p>Precio: {{this.price}}</p>
+                <p>Stock: {{this.stock}}</p>
+                <hr>
+            </div>
+        {{/each}}
+    {{else}}
+        <h2>No eres admin</h2>
+    {{/if}}
+</div>
