@@ -10,6 +10,12 @@ routerViews.get('/', (req, res) => {
     })
 });
 
+routerViews.get('/chat', (req, res) => {
+    res.render('chat', {
+        title: 'ChatFabi',
+    })
+});
+
 routerViews.get('/home', (req, res) => {
 
     const user = {

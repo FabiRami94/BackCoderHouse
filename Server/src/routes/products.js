@@ -80,7 +80,7 @@ productsRoute.put('/products/:pid', async (req, res) => {
 
         const idNumber = parseInt(pid)
     
-        const updateProduct = await productManager.updateProduct(
+        const updateProduct = await productManagerDB.updateProduct(
             idNumber,  
             {title, 
             description, 
