@@ -1,7 +1,12 @@
 
 const {server, Server} = require("./src/app");
-const ProductManager = require("./src/manager/ProductManager.js");
+const ProductManager = require("./src/dao/managerFS/ProductManager.js");
 const productManager = new ProductManager();
+const mongoose = require('./src/db.js');
+
+mongoose.connection.once('open', () => {
+    console.log('Mongo iniciado')
+});
 
 const serverHttp = server.listen(8080, () => {
     console.log('Server listen on port 8080')

@@ -1,9 +1,11 @@
 
 const {Router} = require("express")
 const productsRoute = Router();
-const ProductManager = require('../manager/ProductManager.js');
+const ProductManager = require('../dao/managerFS/ProductManager.js');
+const ProductManagerDB = require('../dao/managerDB/ProductManagerDB.js');
 
 const productManager = new ProductManager();
+const productManagerDB = new ProductManagerDB();
 
 productsRoute.get('/products', async (req, res) => {
 
@@ -12,7 +14,7 @@ productsRoute.get('/products', async (req, res) => {
 
         const isValidLimit = !isNaN(limit) && limit > 0;
 
-        const products = await productManager.getProducts();
+        const products = await productManagerDB.getProducts();
 
         const limitedProducts = isValidLimit ? products.slice(0, limit) : products;
      
@@ -27,9 +29,7 @@ productsRoute.get('/products/:pid', async(req, res) => {
     try {
         const {pid} = req.params
     
-        const idNumber = parseInt(pid)
-    
-        const producById = await productManager.getProductById(idNumber);
+        const producById = await productManagerDB.getProductById(pid);
     
         res.status(200).json({producById});    
     } catch (error) {
@@ -49,7 +49,7 @@ productsRoute.post('/products', async (req, res) => {
             category, 
             thumbnail} = req.body;
     
-        const newProduct = await productManager.addProduct(  
+        const newProduct = await productManagerDB.addProduct(  
             title, 
             description, 
             code, 
@@ -101,9 +101,8 @@ productsRoute.delete('/products/:pid', async (req, res) => {
     
     try {
         const {pid} = req.params      
-        const idNumber = parseInt(pid)
     
-        const productDelete = await productManager.deleteProduct(idNumber)
+        const productDelete = await productManagerDB.deleteProduct(pid)
         
         res.status(200).json({productDelete});
     } catch (error) {
