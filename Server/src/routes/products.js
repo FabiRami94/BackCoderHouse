@@ -28,6 +28,7 @@ productsRoute.get('/products/:pid', async(req, res) => {
 
     try {
         const {pid} = req.params
+        console.log(pid)
     
         const producById = await productManagerDB.getProductById(pid);
     
@@ -43,8 +44,7 @@ productsRoute.post('/products', async (req, res) => {
         const { title, 
             description, 
             code, 
-            price, 
-            status, 
+            price,         
             stock, 
             category, 
             thumbnail} = req.body;
@@ -53,8 +53,7 @@ productsRoute.post('/products', async (req, res) => {
             title, 
             description, 
             code, 
-            price, 
-            status, 
+            price,  
             stock, 
             category, 
             thumbnail)

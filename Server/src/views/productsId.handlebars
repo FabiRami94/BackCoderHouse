@@ -1,0 +1,19 @@
+
+<div>
+    <h1>Detalles del Producto</h1>
+    <p>ID: {{productDetails._id}}</p>
+    <p>Nombre Producto: {{productDetails.title}}</p>
+    <p>Descripción: {{productDetails.description}}</p>
+    <p>Code: {{productDetails.code}}</p>
+    <p>Precio: {{productDetails.price}}</p>
+    <p>Stock: {{productDetails.stock}}</p>
+    <p>Category: {{productDetails.category}}</p>
+    <p>Thumbnail: {{productDetails.thumbnail}}</p>
+    <button id="goBackButton">Volver Atrás</button>
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+        document.getElementById('goBackButton').addEventListener('click', goBack);
+    </script>
+</div>

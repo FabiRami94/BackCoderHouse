@@ -1,0 +1,25 @@
+
+<div>
+    <h1>Hola, Bienvenidos al e-commerce de productos con MongoDB.</h1>
+    {{#if isAdmin}}
+        <select id="orderByPrice" onchange="orderByPrice()">
+            <option value="asc">Precio de menor a mayor</option>
+            <option value="desc">Precio de mayor a menor</option>
+        </select>
+        {{#each products}}
+            <div>
+                <p>ID: {{this._id}}</p>
+                <p>Nombre Producto: {{this.title}}</p>
+                <p>Descripción: {{this.description}}</p>
+                <p>Code: {{this.code}}</p>
+                <p>Precio: {{this.price}}</p>
+                <p>Stock: {{this.stock}}</p>
+                <a href="/views/products/{{this._id}}">Ver Detalles</a>
+                <button onclick="addProduct('{{this._id}}')">Agregar al Carrito</button>
+                <hr>
+            </div>
+        {{/each}}
+    {{else}}
+        <h2>No eres admin</h2>
+    {{/if}}
+</div>
