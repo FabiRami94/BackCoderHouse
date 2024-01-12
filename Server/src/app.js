@@ -6,18 +6,30 @@ const server = express();
 const {Server} = require('socket.io');
 const handlebars = require('express-handlebars');
 const routerViews = require("./routes/routerViews");
+const cookieParser = require("cookie-parser");
+const cookieRouter = require("./routes/cookies");
+const session = require('express-session');
+const sessionRouter = require("./routes/session");
 
 server.use(express.json());
 // motor de plantilla
 server.engine('handlebars', handlebars.engine()); // Configuración handlebars
 server.set('view engine', '.handlebars'); // . para extensión
-server.set('views', __dirname + '/views')
+server.set('views', __dirname + '/views');
 
+server.use(cookieParser('s3cr3t0')); //Signed, for avoid change of cookies
+server.use(session({
+    secret: 'secretCode',
+    resave: true, //Mantener la seción activa, si se pone false y está inactiva, se cerrará.
+    saveUninitialized: true, //Save the session.
+}));
 
 server.use('/api', productsRoute); 
 server.use('/api', cartsRouter); 
+server.use('/', cookieRouter);
+server.use('/', sessionRouter)
 
-server.use('/views', routerViews)
+server.use('/views', routerViews);
 
 module.exports = {server, Server};
 

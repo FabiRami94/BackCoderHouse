@@ -91,4 +91,11 @@ routerViews.get('/products/:pid', async (req, res) => {
     }
 });
 
+routerViews.get('/login', async (req, res) => {
+
+        res.render('login', {
+
+        });
+});
+
 module.exports = routerViews;
