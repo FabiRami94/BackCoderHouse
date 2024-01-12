@@ -4,33 +4,66 @@ const routerViews = Router();
 const dataProducts = require('../sources/dataProducts.json');
 const axios = require("axios");
 
-routerViews.get('/', (req, res) => {
-    res.render('index', {   //2do contexto
-        title: 'MercadoFabi',
-        name: 'Fabi'
-    })
-});
+// routerViews.get('/', (req, res) => {
+    //     res.render('index', {   //2do contexto
+    //         title: 'MercadoFabi',
+    //         name: 'Fabi'
+    //     })
+    // });
+    
+    // routerViews.get('/home', (req, res) => {
+    
+    //     const user = {
+    //         title: 'MercadoFabi',
+    //         name: 'Fabi',
+    //         role: 'admin'
+    //     }
+    
+    //     res.render('home', {   //2do contexto
+    //         title: user.title,
+    //         isAdmin: user.role === 'admin',
+    //         products: dataProducts,
+    //     })
+    // });
 
+
+routerViews.get('/login', async (req, res) => {
+    //res.redirect('/products');
+    try {
+      res.render('login', {
+        title: 'Login',
+      });
+    } catch (error) {
+     
+      res.status(500).render('error', {
+        title: 'Error',
+        message: 'Ocurrio un error, vuelva a intentarlo',
+        code: error.statusCode || 500,
+      });
+    }
+  });
+  
+routerViews.get('/register', async (req, res) => {
+    try {
+      res.render('register', {
+        title: 'Registrate',
+      });
+    } catch (error) {
+
+      res.status(500).render('error', {
+        title: 'Error',
+        message: 'Ocurrio un error, vuelva a intentarlo',
+        code: error.statusCode || 500,
+      });
+    }
+});
+  
 routerViews.get('/chat', (req, res) => {
     res.render('chat', {
         title: 'ChatFabi',
     })
 });
 
-routerViews.get('/home', (req, res) => {
-
-    const user = {
-        title: 'MercadoFabi',
-        name: 'Fabi',
-        role: 'admin'
-    }
-
-    res.render('home', {   //2do contexto
-        title: user.title,
-        isAdmin: user.role === 'admin',
-        products: dataProducts,
-    })
-});
 
 routerViews.get('/realtimeproducts', (req, res) => {
 
@@ -89,13 +122,6 @@ routerViews.get('/products/:pid', async (req, res) => {
     } catch (error) {
         res.status(500).json(error = error.message);
     }
-});
-
-routerViews.get('/login', async (req, res) => {
-
-        res.render('login', {
-
-        });
 });
 
 module.exports = routerViews;
