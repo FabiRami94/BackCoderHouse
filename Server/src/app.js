@@ -16,6 +16,10 @@ const MongoStore = require('connect-mongo');
 require('dotenv').config();
 const {USER, PASSWORD} = process.env;
 
+const passport = require('passport');
+const initializePassport = require('./routes/session.js');
+const passportRouter = require("./routes/passport.js");
+
 const fileStorage = FileStore(session);
 
 server.use(express.json());
@@ -40,10 +44,15 @@ server.use(session({
     saveUninitialized: true, //Save the session.
 }));
 
+initializePassport();
+server.use(passport.initialize());
+server.use(passport.session());
+
 server.use('/api', productsRoute); 
 server.use('/api', cartsRouter); 
 server.use('/', cookieRouter);
-server.use('/', sessionRouter)
+server.use('/', sessionRouter);
+server.use('/', passportRouter);
 
 server.use('/views', routerViews);
 

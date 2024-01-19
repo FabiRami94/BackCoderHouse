@@ -33,6 +33,8 @@ sessionRouter.get('/login', (req, res) => {
 
     const {username, password} = req.query;
 
+    // isValidPassword(password); //FOCUS
+
     if(username !== 'Fabián' || password !== '123456'){
         return res.send('login failed!!')
     } 
