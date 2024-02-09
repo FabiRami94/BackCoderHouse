@@ -1,43 +1,69 @@
 
-const CartsModel = require('../models/cartsModel.js');
+const cartsModel = require('../models/cartsModel.js');
+const ProductManagerDB = require('./ProductManagerDB.js'); 
+
+const productsService = new ProductManagerDB();
 
 class CartManagerDB {
 
-  constructor() {}
-
-  async createCart() {
-      const newCart = new CartsModel({
-          products: []
-      });
-
-      const createdCart = await newCart.save();
-
-      return createdCart;
-  }
-
-  async getCartById(cartId) {
-      const cart = await CartsModel.findById(cartId).exec();
-      return cart ? cart.products : null;
-  }
-
-  async addProductToCart(cartId, productId) {
-
-      const cart = await CartsModel.findById(cartId).exec();
-
-      if (cart) {
-          const productIndex = cart.products.findIndex((p) => p.pid === productId);
-
-          if (productIndex !== -1) {
-              cart.products[productIndex].quantity += 1;
-          } else {
-              cart.products.push({ pid: productId, quantity: 1 });
-          }
-
-          await cart.save();
-      } else {
-          console.log(`No se encontró ningún carrito con el id: ${cartId}`);
+    constructor() {
+        this.model = cartsModel;
       }
-  }
+    
+      create = async () => await this.model.create({});
+      getCarts = async () => await this.model.find({});
+      getCartsPopulate = async () => await this.model.find().populate('products.product');
+      getCartsById = async cid => await this.model.findById({ _id: cid });
+      getCartsByIdPopulate = async cid => await this.model.findById({ _id: cid }).populate('products.product');
+    
+      async increaseProductQuantity(cid, pId) {
+        const result = await this.model.updateOne(
+          { _id: cid, "products.product": pId },
+          { $inc: { "products.$.quantity": 1 } }
+        );
+        return await this.model.findById(cid);
+      }
+
+      decreaseProductQuantity = async (cid, pId) => {
+        const result = await this.model.updateOne(
+          { _id: cid, "products.product": pId },
+          { $inc: { "products.$.quantity": -1 } }
+        );
+        return await this.model.findById(cid);
+      }
+
+      updateProductQuantity = async (cid, pId, quantity) => {
+        const result = await this.model.updateOne(
+          { _id: cid, "products.product": pId },
+          { $set: { "products.$.quantity": quantity } }
+        );
+        return await this.model.findById(cid);
+      }
+
+      removeProduct = async (cid, pId) => {
+        const result = await this.model.updateOne(
+          { _id: cid },
+          { $pull: { products: { product: pId }}}
+        );
+        return await this.model.findById(cid);
+    
+      }
+    
+      updateCartProducts = async (cid, newProducts) => {
+        const result = await this.model.updateOne(
+          { _id: cid },
+          { $set: { products: newProducts } }
+        );
+        return await this.model.findById(cid);
+      }
+
+      removeCartProducts = async (cid) => {
+        const result = await this.model.updateOne(
+          { _id: cid },
+          { $set: { products: [] } }
+        );
+        return await this.model.findById(cid);
+      }
 }
   
 module.exports = CartManagerDB;

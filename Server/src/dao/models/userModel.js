@@ -1,6 +1,7 @@
 
 let mongoose = require("mongoose");
 const { Schema } = mongoose;
+import mongoosePaginate from 'mongoose-paginate-v2'
 
 const usersSchema = new Schema({
     first_name: {
@@ -29,6 +30,12 @@ const usersSchema = new Schema({
         default: 'user'
     }
 })
+
+usersSchema.pre('find', function () {
+    this.populate('cart');
+  });
+  
+usersSchema.plugin(mongoosePaginate);
 
 const UsersModel = mongoose.model('UsersModel', usersSchema);
 
