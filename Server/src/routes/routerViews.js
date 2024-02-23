@@ -124,4 +124,40 @@ routerViews.get('/products/:pid', async (req, res) => {
     }
 });
 
+routerViews.get( '/shoppingcart', async(req, res) => {
+  try {
+      const userId = req.session && req.session.user ? req.session.user.user : null
+      if (!userId) {
+          return res.status(400).send('User not logged in')
+      }
+
+      const user = await this.userViewService.getUserBy({ _id: userId })
+      const cartId = user.cart
+      if (!cartId) {
+          return res.status(400).send('User does not have a cart')
+      }
+
+      const cart = await this.cartViewService.getCartById(cartId)
+
+      const productDetailsPromises = cart.map(async item => {
+          const productId = item.product.toString()
+          const productDetailArray = await this.productViewService.getProductById(productId)
+          const productDetail = productDetailArray[0]
+          return { productDetail, quantity: item.quantity }
+      })
+      
+      const productsWithQuantities = await Promise.all(productDetailsPromises)
+      
+      res.render('shoppingCart', { 
+          title: 'Shopping Cart',
+          cartId,
+          productsWithQuantities
+      })
+  }
+  catch(err){
+      console.log(err)
+      res.status(500).send('Server error')
+  }
+})
+
 module.exports = routerViews;

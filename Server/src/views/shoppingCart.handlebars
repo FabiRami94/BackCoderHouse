@@ -1,0 +1,40 @@
+
+<main>
+    <header>
+        <h3>SHOPPING CART</h3>
+    </header>
+    <div>
+        {{#each productsWithQuantities}}
+            <p>{{this.productDetail.thumbnail}}</p>
+            <p>{{this.productDetail.title}}</p>
+            <p>{{this.quantity}}</p>
+        {{/each}}
+    </div>
+    <div>
+        <a id="purchase">BUY</a>
+    </div>
+</main>
+
+<script>
+    document.getElementById('purchase').addEventListener('click', function() {
+        const cartId = "{{cartId}}"
+        fetch(`/api/carts/${cartId}/purchase`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json()
+            }
+            throw new Error('Network response was not ok.')
+        })
+        .then(data => {       
+            console.log(data)
+        })
+        .catch(error => {  
+            console.error('Error:', error)
+        })
+    });
+</script>
