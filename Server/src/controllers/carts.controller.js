@@ -1,6 +1,9 @@
 
 const ProductManagerDB = require('../dao/managerDB/ProductManagerDB.js');
 const CartManagerDB = require('../dao/managerDB/CartManagerDB.js');
+const customError = require('../errors/customError.js');
+const { generateCartErrorInfo, generateCartRemoveErrorInfo } = require('../errors/generateError.js');
+const { EErrors } = require('../errors/enum.js');
 
 const productsService = new ProductManagerDB();
 
@@ -71,11 +74,19 @@ class CartsController {
     }
   }
 
-  removeProductFromCart = async (req,res) =>{
+  removeProductFromCart = async (req,res,next) =>{
     try {
         const { cid, pid } = req.params
-        const result = await this.service.removeProductFromCart(cid, pid)
-  
+        if(!cid || !pid){
+            customError.createError({
+                name: 'Error to remove product from cart',
+                cause: generateCartRemoveErrorInfo(cid, pid),
+                message: 'Cant remove product from cart',
+                code: EErrors.DATABASE_ERROR,
+            })
+        }
+        const result = await this.cartService.removeProductFromCart(cid, pid)
+
         if (result.success) {
           res.json({
             status: 'success',
@@ -88,10 +99,9 @@ class CartsController {
           })
         }
     } catch (error) {
-        console.error(error)
-        res.status(500).send('Server error')
+        next(error)
     }
-  }
+}
 
   updateProductQuantity = async (req, res) => {
     try {
