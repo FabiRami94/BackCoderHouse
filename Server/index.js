@@ -3,13 +3,14 @@ const {server, Server} = require("./src/app");
 const ProductManager = require("./src/dao/managerFS/ProductManager.js");
 const productManager = new ProductManager();
 const mongoose = require('./src/db.js');
+const { logger } = require('./src/utils/logger.js');
 
 mongoose.connection.once('open', () => {
     console.log('Mongo iniciado')
 });
 
 const serverHttp = server.listen(8080, () => {
-    console.log('Server listen on port 8080')
+    logger.info('Server listen on port 8080');
 });
 
 // socket.io

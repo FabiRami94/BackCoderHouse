@@ -21,6 +21,7 @@ const { handleError } = require('./middlewares/handlerError.js');
 const passport = require('passport');
 const initializePassport = require('./routes/session.js');
 const passportRouter = require("./routes/passport.js");
+const { addLogger } = require('./utils/logger.js')
 
 const fileStorage = FileStore(session);
 
@@ -58,5 +59,7 @@ server.use('/', passportRouter);
 
 server.use('/views', routerViews);
 server.use(handleError);
+
+server.use(addLogger)
 
 module.exports = {server, Server};
